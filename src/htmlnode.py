@@ -14,13 +14,12 @@ class HTMLNode:
         if self.props == None or len(self.props) == 0:
             return html_attributes
         
-        for (attr, value) in self.props:
-            new_attr = f" {attr}=\"{value}\""
+        for prop in self.props:
+            new_attr = f" {prop}=\"{self.props[prop]}\""
             html_attributes += new_attr
         
         return html_attributes
 
     def __repr__(self):
-        print(f"Debug:\nTag = {self.tag}\nValue = {self.value}\nChildren: {self.children}\nProps: {self.props}")
-
-    
+        return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
+   
