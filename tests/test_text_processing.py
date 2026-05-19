@@ -116,7 +116,7 @@ class TestSplitLinks(unittest.TestCase):
 
 class TestTextToTextNodes(unittest.TestCase):
     def test_text_to_textnodes(self):
-        text = "This is **bold** text with a *italic* word, a `code block`, an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)"
+        text = "This is **bold** text with a _italic_ word, a `code block`, an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)"
         text_nodes = text_to_textnodes(text)
         self.assertListEqual(
             [
