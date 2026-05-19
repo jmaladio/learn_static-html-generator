@@ -1,7 +1,7 @@
-from parentnode import ParentNode
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode
-from leafnode import LeafNode
+from nodes.parentnode import ParentNode
+from nodes.textnode import TextNode, TextType
+from nodes.htmlnode import HTMLNode
+from nodes.leafnode import LeafNode
 
 
 def main():
