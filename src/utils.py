@@ -1,3 +1,5 @@
+from email.mime import image
+
 from textnode import TextNode, TextType
 from leafnode import LeafNode
 
@@ -43,7 +45,52 @@ def extract_markdown_images(text):
     matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return [(match[0], match[1]) for match in matches]
 
-
 def extract_markdown_links(text):
     matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return [(match[0], match[1]) for match in matches]
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+
+    for node in old_nodes:
+        processed_nodes = []
+        text_to_process = node.text
+        images = extract_markdown_images(node.text)
+        if len(images) == 0:
+            new_nodes.append(node)
+        else:
+            for image_alt, image_link in images:
+                sections = text_to_process.split(f"![{image_alt}]({image_link})", 1)
+                if len(sections[0]) != 0:
+                    processed_nodes.append(TextNode(sections[0], TextType.TEXT))
+                processed_nodes.append(TextNode(image_alt, TextType.IMAGE, image_link))
+                text_to_process = sections[1]
+            if len(text_to_process) != 0:
+                    processed_nodes.append(TextNode(text_to_process, TextType.TEXT))
+            
+            new_nodes.extend(processed_nodes)
+            
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+
+    for node in old_nodes:
+        processed_nodes = []
+        text_to_process = node.text
+        links = extract_markdown_links(node.text)
+        if len(links) == 0:
+            new_nodes.append(node)
+        else:
+            for link_text, link_url in links:
+                sections = text_to_process.split(f"[{link_text}]({link_url})", 1)
+                if len(sections[0]) != 0:
+                    processed_nodes.append(TextNode(sections[0], TextType.TEXT))
+                processed_nodes.append(TextNode(link_text, TextType.LINK, link_url))
+                text_to_process = sections[1]
+            if len(text_to_process) != 0:
+                    processed_nodes.append(TextNode(text_to_process, TextType.TEXT))
+            
+            new_nodes.extend(processed_nodes)
+
+    return new_nodes
