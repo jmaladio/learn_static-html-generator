@@ -1,6 +1,6 @@
 import unittest
 
-from utils import text_node_to_html_node, split_nodes_delimiter
+from utils import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 from textnode import TextNode, TextType
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
@@ -49,3 +49,29 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         self.assertEqual(new_nodes[0], TextNode("This is text with a ", TextType.TEXT))
         self.assertEqual(new_nodes[1], TextNode("code block", TextType.CODE))
         self.assertEqual(new_nodes[2], TextNode(" word", TextType.TEXT))
+
+class TestExtractMakdownImages(unittest.TestCase):
+    def test_extract_markdown_image(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_markdown_multiple_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![image2](https://i.imgur.com/another.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png"), ("image2", "https://i.imgur.com/another.png")], matches)
+
+class TestExtractMarkdownLinks(unittest.TestCase):
+    def test_extract_markdown_link(self):
+        matches = extract_markdown_links(
+            "This is text with an [link](https://www.google.com)"
+        )
+        self.assertListEqual([("link", "https://www.google.com")], matches)
+    
+    def test_extract_markdown_multiple_links(self):
+        matches = extract_markdown_links(
+            "This is text with an [link](https://www.google.com) and another [link2](https://www.github.com)"
+        )
+        self.assertListEqual([("link", "https://www.google.com"), ("link2", "https://www.github.com")], matches)
