@@ -1,29 +1,11 @@
-from nodes.parentnode import ParentNode
-from nodes.textnode import TextNode, TextType
-from nodes.htmlnode import HTMLNode
-from nodes.leafnode import LeafNode
-
+from static_files_processing import create_public, copy_static_to_public
 
 def main():
-    text_node = TextNode(
-        "This is some anchor text", TextType.LINK, "https://www.boot.dev"
-    )
-    print(text_node.__repr__())
+    static_folder = 'static'
+    public_folder = 'public'
+    
+    create_public(public_folder)
+    
+    copy_static_to_public(static_folder, public_folder)
 
-    html_node = HTMLNode("p", "This is a paragraph", None, { "style": { "color": "blue"} } )
-    print(html_node.__repr__())
-
-    leaf_node = LeafNode("p", "This is a paragraph", { "attr": "val" })
-    print(leaf_node.__repr__())
-
-    parent_node = ParentNode(
-        "p",
-        [
-            LeafNode("b", "Bold text"),
-            LeafNode(None, "Normal text"),
-            LeafNode("i", "italic text"),
-            LeafNode(None, "Normal text"),
-        ],
-    )
-    print(parent_node.__repr__())
 main()
