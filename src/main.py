@@ -1,4 +1,4 @@
-from static_files_processing import create_public, copy_static_to_public, generate_page
+from static_files_processing import create_public, copy_static_to_public, generate_pages_recursive
 
 def main():
     static_folder = 'static'
@@ -8,6 +8,6 @@ def main():
     
     copy_static_to_public(static_folder, public_folder)
 
-    generate_page('content/index.md', 'template.html', 'public/index.html')
+    generate_pages_recursive('content', 'template.html', 'public')
 
 main()
